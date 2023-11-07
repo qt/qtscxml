@@ -2084,6 +2084,9 @@ bool QScxmlCompilerPrivate::postReadElementScript()
                 scriptI->content = QString::fromUtf8(data);
             }
         }
+    } else {
+        addError(scriptI->xmlLocation,
+                QStringLiteral("neither src nor any content has been given in the script tag"));
     }
     return flushInstruction();
 }

@@ -80,5 +80,7 @@
         <file>data/syntaxErrors9.scxml</file>
         <file>data/test1.scxml.errors</file>
         <file>data/test1.scxml</file>
+        <file>data/emptyScript.scxml</file>
+        <file>data/emptyScript.scxml.errors</file>
     </qresource>
 </RCC>
