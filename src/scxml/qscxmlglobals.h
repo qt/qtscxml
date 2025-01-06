@@ -4,7 +4,7 @@
 #ifndef QSCXMLGLOBALS_H
 #define QSCXMLGLOBALS_H
 #include <QtCore/qglobal.h>
-#include <QtScxml/qtscxml-config.h>
+#include <QtScxmlGlobal/qtscxmlglobal-config.h>
 
 #if defined(BUILD_QSCXMLC)
 #  define Q_SCXML_EXPORT

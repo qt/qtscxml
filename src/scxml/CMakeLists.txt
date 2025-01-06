@@ -30,6 +30,7 @@ qt_internal_add_module(Scxml
         QT_NO_CAST_TO_ASCII
     LIBRARIES
         Qt::CorePrivate
+        Qt::ScxmlGlobal
     PUBLIC_LIBRARIES
         Qt::Core
     PRIVATE_MODULE_INTERFACE
