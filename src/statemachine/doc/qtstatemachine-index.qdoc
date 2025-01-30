@@ -25,7 +25,7 @@
 
     \section3 Building with qmake
 
-    \include {module-use.qdocinc} {building with cmake} {statemachine}
+    \include {module-use.qdocinc} {building_with_qmake} {statemachine}
 
     \section1 Articles and Guides
 
