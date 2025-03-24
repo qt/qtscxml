@@ -17,31 +17,31 @@
 
 #### Features
 
-qt_feature("scxml" PUBLIC
+qt_feature("scxml" PRIVATE
     LABEL "Qt SCXML"
     PURPOSE "Allows embedding of state machines created from State Chart XML (SCXML) files."
 )
-qt_feature("scxml-qml" PUBLIC
+qt_feature("scxml-qml" PRIVATE
     LABEL "SCXML QML Types"
     PURPOSE "Provides QML Types for Qt SCXML."
     CONDITION QT_FEATURE_scxml AND TARGET Qt::Qml
 )
-qt_feature("scxml-ecmascriptdatamodel" PUBLIC
+qt_feature("scxml-ecmascriptdatamodel" PRIVATE
     LABEL "ECMAScript data model for QtScxml"
     PURPOSE "Enables the usage of ecmascript data models in SCXML state machines."
     CONDITION QT_FEATURE_scxml AND TARGET Qt::Qml
 )
 
-qt_feature("statemachine" PUBLIC
+qt_feature("statemachine" PRIVATE
     LABEL "Qt State Machine"
     PURPOSE "Provides hierarchical finite state machines."
 )
-qt_feature("statemachine-qml" PUBLIC
+qt_feature("statemachine-qml" PRIVATE
     LABEL "StateMachine QML Type"
     PURPOSE "Provides QML Type for Qt State Machine."
     CONDITION QT_FEATURE_statemachine AND TARGET Qt::Qml
 )
-qt_feature("qeventtransition" PUBLIC
+qt_feature("qeventtransition" PRIVATE
     LABEL "Q(Mouse)EventTransition class"
     PURPOSE "Provides QObject-specific transitions for Qt events."
     CONDITION QT_FEATURE_statemachine AND TARGET Qt::Gui
