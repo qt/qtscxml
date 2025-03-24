@@ -5,7 +5,6 @@
 #define QSTATEMACHINEGLOBAL_H
 
 #include <QtCore/qglobal.h>
-#include <QtScxmlGlobal/qtscxmlglobal-config.h>
 
 #if defined(BUILD_QSTATEMACHINE)
 #  define Q_STATEMACHINE_EXPORT

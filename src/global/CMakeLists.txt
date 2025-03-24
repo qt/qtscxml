@@ -5,11 +5,9 @@
 ## ScxmlGlobal Module:
 #####################################################################
 
-qt_internal_add_module(ScxmlGlobal
+qt_internal_add_module(ScxmlGlobalPrivate
     INTERNAL_MODULE
     HEADER_MODULE
     CONFIGURE_FILE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../../configure.cmake"
-    MODULE_INTERFACE_NAME ScxmlGlobal # Specify the 'ScxmlGlobal' name explicitly to avoid
-                                      # warning related to the expected name of internal module.
     NO_GENERATE_CPP_EXPORTS
 )
