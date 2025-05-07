@@ -1,7 +1,7 @@
 --- .upstream/generator.cpp	2024-05-08 08:57:34.586091856 +0200
 +++ generator.cpp	2024-08-05 16:00:04.723392397 +0200
 @@ -4,7 +4,9 @@
- // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
+ // SPDX-License-Identifier: LicenseRef-Qt-Commercial
  
  #include "generator.h"
 +#if 0 // -- QtScxml
