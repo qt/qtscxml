@@ -539,7 +539,7 @@ void tst_StateMachine::bindings()
     // -- QScxmlStateMachine::invokedServices
     // Test executes statemachine and observes as the invoked services change
     TopMachine topSm;
-    QSignalSpy invokedSpy(&topSm, SIGNAL(invokedServicesChanged(const QList<QScxmlInvokableService *>)));
+    QSignalSpy invokedSpy(&topSm, SIGNAL(invokedServicesChanged(QList<QScxmlInvokableService*>)));
     QCOMPARE(topSm.invokedServices().size(), 0);
     // at some point during the topSm execution there are 3 invoked services
     topSm.start();
