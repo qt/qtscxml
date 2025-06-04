@@ -454,35 +454,6 @@ void QScxmlStateMachinePrivate::postEvent(QScxmlEvent *event)
 {
     Q_Q(QScxmlStateMachine);
 
-    if (!event->name().startsWith(QStringLiteral("done.invoke."))) {
-        for (int id = 0, end = static_cast<int>(m_invokedServices.size()); id != end; ++id) {
-            auto service = m_invokedServices[id].service;
-            if (service == nullptr)
-                continue;
-            auto factory = serviceFactory(id);
-            if (event->invokeId() == service->id()) {
-                setEvent(event);
-
-                const QScxmlExecutableContent::ContainerId finalize
-                        = factory->invokeInfo().finalize;
-                if (finalize != QScxmlExecutableContent::NoContainer) {
-                    auto psm = service->parentStateMachine();
-                    qCDebug(qscxmlLog) << psm << "running finalize on event";
-                    auto smp = QScxmlStateMachinePrivate::get(psm);
-                    smp->m_executionEngine->execute(finalize);
-                }
-
-                resetEvent();
-            }
-            if (factory->invokeInfo().autoforward) {
-                qCDebug(qscxmlLog) << q << "auto-forwarding event" << event->name()
-                                   << "from" << q->name()
-                                   << "to child" << service->id();
-                service->postEvent(new QScxmlEvent(*event));
-            }
-        }
-    }
-
     if (event->eventType() == QScxmlEvent::ExternalEvent)
         m_router.route(event->name().split(QLatin1Char('.')), event);
 
@@ -597,6 +568,32 @@ void QScxmlStateMachinePrivate::processEvents()
         } else if (!m_externalQueue.isEmpty()) {
             auto event = m_externalQueue.dequeue();
             setEvent(event);
+
+            for (int id = 0, end = static_cast<int>(m_invokedServices.size()); id != end; ++id) {
+                auto service = m_invokedServices[id].service;
+                if (service == nullptr)
+                    continue;
+                auto factory = serviceFactory(id);
+                if (event->invokeId() == service->id()) {
+                    const QScxmlExecutableContent::ContainerId finalize
+                            = factory->invokeInfo().finalize;
+                    if (finalize != QScxmlExecutableContent::NoContainer) {
+                        auto psm = service->parentStateMachine();
+                        qCDebug(qscxmlLog) << psm << "running finalize on event";
+                        auto smp = QScxmlStateMachinePrivate::get(psm);
+                        smp->m_executionEngine->execute(finalize);
+                    }
+
+                }
+
+                if (factory->invokeInfo().autoforward) {
+                    qCDebug(qscxmlLog) << q << "auto-forwarding event" << event->name()
+                                        << "from" << q->name()
+                                        << "to child" << service->id();
+                    service->postEvent(new QScxmlEvent(*event));
+                }
+            }
+
             selectTransitions(enabledTransitions, configurationInDocumentOrder, event);
             if (!enabledTransitions.isEmpty()) {
                 microstep(enabledTransitions);

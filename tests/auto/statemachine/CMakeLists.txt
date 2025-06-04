@@ -37,6 +37,7 @@ set(tst_statemachine_resource_files
     "statenames.scxml"
     "statenamesnested.scxml"
     "foreach.scxml"
+    "finalizeOnDoneInvokeEvent.scxml"
 )
 
 qt_internal_add_resource(tst_statemachine "tst_statemachine"

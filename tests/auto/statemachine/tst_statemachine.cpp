@@ -43,6 +43,8 @@ private Q_SLOTS:
     void bindings();
 
     void setTableDataUpdatesObjectNames();
+
+    void finalizeRunsOnDoneInvokeEvents();
 };
 
 void tst_StateMachine::stateNames_data()
@@ -633,6 +635,23 @@ void tst_StateMachine::setTableDataUpdatesObjectNames()
     // object name already set, so do not update
     sm->setTableData(stateMachine2->tableData());
     QCOMPARE_EQ(sm->objectName(), sm1ObjectName); // did not change
+}
+
+void tst_StateMachine::finalizeRunsOnDoneInvokeEvents()
+{
+    QScopedPointer<QScxmlStateMachine> stateMachine(
+                QScxmlStateMachine::fromFile(QString(":/tst_statemachine/finalizeOnDoneInvokeEvent.scxml")));
+    QVERIFY(!stateMachine.isNull());
+
+    QSignalSpy logSpy(stateMachine.data(), SIGNAL(log(QString,QString)));
+
+    stateMachine->start();
+
+    QTRY_COMPARE(logSpy.size(), 1);
+
+    QList<QVariant> arguments = logSpy.takeFirst();
+    QCOMPARE(arguments.at(0).toString(), QString(u"finalize"));
+    QVERIFY(arguments.at(1).toString().startsWith("done.invoke.s0"));
 }
 
 QTEST_MAIN(tst_StateMachine)
