@@ -38,6 +38,8 @@ private Q_SLOTS:
     void multipleInvokableServices(); // QTBUG-61484
     void logWithoutExpr();
 
+    void foreachLoop();
+
     void bindings();
 
     void setTableDataUpdatesObjectNames();
@@ -455,6 +457,45 @@ void tst_StateMachine::logWithoutExpr()
     stateMachine->start();
     QSignalSpy logSpy(stateMachine.data(), SIGNAL(log(QString,QString)));
     QTRY_COMPARE(logSpy.size(), 1);
+}
+
+void tst_StateMachine::foreachLoop()
+{
+    QScopedPointer<QScxmlStateMachine> stateMachine(
+                QScxmlStateMachine::fromFile(QString(":/tst_statemachine/foreach.scxml")));
+    QVERIFY(!stateMachine.isNull());
+
+    qRegisterMetaType<QScxmlEvent>();
+    QSignalSpy finishedSpy(stateMachine.data(), SIGNAL(finished()));
+
+    int events1 = 0;
+    int events2 = 0;
+    int events3 = 0;
+
+    auto con1 = stateMachine->connectToEvent("internalEvent1", [&events1](const QScxmlEvent &event) {
+        ++events1;
+        QCOMPARE(event.name(), QString("internalEvent1"));
+    });
+    QVERIFY(con1);
+
+    auto con2 = stateMachine->connectToEvent("internalEvent2", [&events2](const QScxmlEvent &event) {
+        ++events2;
+        QCOMPARE(event.name(), QString("internalEvent2"));
+    });
+    QVERIFY(con2);
+
+    auto con3 = stateMachine->connectToEvent("internalEvent3", [&events3](const QScxmlEvent &event) {
+        ++events3;
+        QCOMPARE(event.name(), QString("internalEvent3"));
+    });
+    QVERIFY(con3);
+
+    stateMachine->start();
+
+    finishedSpy.wait(5000);
+    QCOMPARE(events1, 3);
+    QCOMPARE(events2, 3);
+    QCOMPARE(events3, 3);
 }
 
 void tst_StateMachine::bindings()

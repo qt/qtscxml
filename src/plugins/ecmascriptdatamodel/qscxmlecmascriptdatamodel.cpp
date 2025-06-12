@@ -431,7 +431,7 @@ void QScxmlEcmaScriptDataModel::evaluateForeach(QScxmlExecutableContent::Evaluat
     Q_ASSERT(body);
     const ForeachInfo &info = d->m_stateMachine->tableData()->foreachInfo(id);
 
-    QJSValue jsArray = d->property(d->string(info.array));
+    QJSValue jsArray = d->evalJSValue(d->string(info.array), d->string(info.context), ok);
     if (!jsArray.isArray()) {
         d->submitError(QStringLiteral("error.execution"), QStringLiteral("invalid array '%1' in %2").arg(d->string(info.array), d->string(info.context)));
         *ok = false;
