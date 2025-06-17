@@ -41,7 +41,15 @@ private Q_SLOTS:
     void bindings();
 
     void setTableDataUpdatesObjectNames();
+    void errorsFromNestedStatemachine(); // QTBUG-135396
 };
+
+void tst_StateMachine::errorsFromNestedStatemachine()
+{
+    QScopedPointer<QScxmlStateMachine> machine(QScxmlStateMachine::fromFile(":/tst_statemachine/nestedinvoker.scxml"));
+    auto error = machine->parseErrors().front();
+    QCOMPARE(error.fileName(), "nestederror.scxml");
+}
 
 void tst_StateMachine::stateNames_data()
 {
