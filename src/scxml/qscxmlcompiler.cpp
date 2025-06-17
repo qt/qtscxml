@@ -40,7 +40,7 @@ namespace {
 class ScxmlVerifier: public DocumentModel::NodeVisitor
 {
 public:
-    ScxmlVerifier(std::function<void (const DocumentModel::XmlLocation &, const QString &)> errorHandler)
+    ScxmlVerifier(std::function<void (const QString &, const DocumentModel::XmlLocation &, const QString &)> errorHandler)
         : m_errorHandler(errorHandler)
         , m_doc(nullptr)
         , m_hasErrors(false)
@@ -418,11 +418,11 @@ private:
     {
         m_hasErrors = true;
         if (m_errorHandler)
-            m_errorHandler(location, message);
+            m_errorHandler(m_doc->fileName, location, message);
     }
 
 private:
-    std::function<void (const DocumentModel::XmlLocation &, const QString &)> m_errorHandler;
+    std::function<void (const QString &, const DocumentModel::XmlLocation &, const QString &)> m_errorHandler;
     DocumentModel::ScxmlDocument *m_doc;
     bool m_hasErrors;
     QHash<QString, DocumentModel::AbstractState *> m_stateById;
@@ -1321,8 +1321,8 @@ bool QScxmlCompilerPrivate::verifyDocument()
     if (!m_doc)
         return false;
 
-    auto handler = [this](const DocumentModel::XmlLocation &location, const QString &msg) {
-        this->addError(location, msg);
+    auto handler = [this](const QString &fileName, const DocumentModel::XmlLocation &location, const QString &msg) {
+        this->addError(fileName, location, msg);
     };
 
     if (ScxmlVerifier(handler).verify(m_doc.get()))
@@ -2053,7 +2053,7 @@ bool QScxmlCompilerPrivate::postReadElementScript()
             }
         }
     } else {
-        addError(scriptI->xmlLocation,
+        addError(m_doc->fileName, scriptI->xmlLocation,
                 QStringLiteral("neither src nor any content has been given in the script tag"));
     }
     return flushInstruction();
@@ -2332,9 +2332,9 @@ void QScxmlCompilerPrivate::addError(const QString &msg)
     m_errors.append(QScxmlError(m_fileName, m_reader->lineNumber(), m_reader->columnNumber(), msg));
 }
 
-void QScxmlCompilerPrivate::addError(const DocumentModel::XmlLocation &location, const QString &msg)
+void QScxmlCompilerPrivate::addError(const QString &fileName, const DocumentModel::XmlLocation &location, const QString &msg)
 {
-    m_errors.append(QScxmlError(m_fileName, location.line, location.column, msg));
+    m_errors.append(QScxmlError(fileName, location.line, location.column, msg));
 }
 
 DocumentModel::AbstractState *QScxmlCompilerPrivate::currentParent() const
@@ -2353,7 +2353,7 @@ bool QScxmlCompilerPrivate::maybeId(const QXmlStreamAttributes &attributes, QStr
     QString idStr = attributes.value(QLatin1String("id")).toString();
     if (!idStr.isEmpty()) {
         if (m_allIds.contains(idStr)) {
-            addError(xmlLocation(), QStringLiteral("duplicate id '%1'").arg(idStr));
+            addError(m_doc->fileName, xmlLocation(), QStringLiteral("duplicate id '%1'").arg(idStr));
         } else {
             m_allIds.insert(idStr);
             *id = idStr;
