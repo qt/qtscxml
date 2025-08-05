@@ -1,5 +1,5 @@
---- .upstream/moc.h	2024-11-22 10:57:14.673629148 +0100
-+++ moc.h	2024-11-29 14:50:33.988625304 +0100
+--- .upstream/moc.h	2025-07-04 08:47:51.556486285 +0200
++++ moc.h	2025-08-05 10:35:50.722576269 +0200
 @@ -4,15 +4,13 @@
  #ifndef MOC_H
  #define MOC_H
@@ -45,7 +45,7 @@
      ReferenceType referenceType;
  };
  Q_DECLARE_TYPEINFO(Type, Q_RELOCATABLE_TYPE);
-@@ -92,8 +92,9 @@
+@@ -93,8 +93,9 @@
      bool inlineCode = false;
      bool wasCloned = false;
  
@@ -56,7 +56,7 @@
      bool isCompat = false;
      bool isInvokable = false;
      bool isScriptable = false;
-@@ -107,6 +108,11 @@
+@@ -108,6 +109,11 @@
  
      QJsonObject toJson(int index) const;
      static void accessToJson(QJsonObject *obj, Access acs);
@@ -68,7 +68,7 @@
  };
  Q_DECLARE_TYPEINFO(FunctionDef, Q_RELOCATABLE_TYPE);
  
-@@ -135,6 +141,10 @@
+@@ -137,6 +143,10 @@
      qsizetype location = -1; // token index, used for error reporting
  
      QJsonObject toJson() const;
@@ -79,7 +79,7 @@
  };
  Q_DECLARE_TYPEINFO(PropertyDef, Q_RELOCATABLE_TYPE);
  
-@@ -216,6 +226,7 @@
+@@ -219,6 +229,7 @@
  };
  Q_DECLARE_TYPEINFO(NamespaceDef, Q_RELOCATABLE_TYPE);
  
@@ -87,7 +87,7 @@
  class Moc : public Parser
  {
  public:
-@@ -305,6 +316,7 @@
+@@ -309,6 +320,7 @@
  
      void checkListSizes(const ClassDef &def);
  };
