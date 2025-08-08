@@ -4,11 +4,13 @@
 #include "statemachineloader_p.h"
 
 #include <QtScxml/qscxmlstatemachine.h>
-#include <qqmlcontext.h>
-#include <qqmlengine.h>
-#include <qqmlinfo.h>
-#include <qqmlfile.h>
-#include <qbuffer.h>
+
+#include <QtQml/qqmlcontext.h>
+#include <QtQml/qqmlengine.h>
+#include <QtQml/qqmlfile.h>
+#include <QtQml/qqmlinfo.h>
+
+#include <QtCore/qfile.h>
 
 /*!
     \qmltype StateMachineLoader
@@ -147,32 +149,16 @@ bool QScxmlStateMachineLoader::parse(const QUrl &source)
                          .arg(source.url());
         return false;
     }
-    QQmlFile scxmlFile(QQmlEngine::contextForObject(this)->engine(), source);
-    if (scxmlFile.isError()) {
-        // the synchronous case can only fail when the file is not found (or not readable).
-        qmlWarning(this) << QStringLiteral("Cannot open '%1' for reading.").arg(source.url());
+
+    const QString fileName = QQmlFile::urlToLocalFileOrQrc(source);
+    QFile file(fileName);
+    if (!file.open(QIODevice::ReadOnly)) {
+        qmlWarning(this) << QStringLiteral("Cannot open '%1' for reading: %2")
+            .arg(fileName, file.errorString());
         return false;
     }
 
-    QByteArray data(scxmlFile.dataByteArray());
-    QBuffer buf(&data);
-    if (!buf.open(QIODevice::ReadOnly)) {
-        qmlWarning(this) << QStringLiteral("Cannot open input buffer for reading");
-        return false;
-    }
-
-    QString fileName;
-    if (source.isLocalFile()) {
-        fileName = source.toLocalFile();
-    } else if (source.scheme() == QStringLiteral("qrc")) {
-        fileName = QStringLiteral(":") + source.path();
-    } else {
-        qmlWarning(this) << QStringLiteral("%1 is neither a local nor a resource URL.")
-                            .arg(source.url())
-                         << QStringLiteral("Invoking services by relative path will not work.");
-    }
-
-    auto stateMachine = QScxmlStateMachine::fromData(&buf, fileName);
+    auto stateMachine = QScxmlStateMachine::fromData(&file, fileName);
     stateMachine->setParent(this);
     m_implicitDataModel = stateMachine->dataModel();
 

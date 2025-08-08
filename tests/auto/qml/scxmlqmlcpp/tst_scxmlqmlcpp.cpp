@@ -145,9 +145,10 @@ void tst_scxmlqmlcpp::stateMachineLoaderSourceStateMachineBinding()
     QUrl sourceBroken(testFileUrl("brokenstatemachine.scxml"));
 
     QVERIFY(sml->stateMachine() != nullptr);
-    QTest::ignoreMessage(QtWarningMsg,
-                        qPrintable(smlUrl.toString() + ":5:5: QML StateMachineLoader: " +
-                        "Cannot open '" + sourceNonexistent.toString() + "' for reading."));
+    QTest::ignoreMessage(QtWarningMsg, QRegularExpression(
+                        smlUrl.toString() + ":5:5: QML StateMachineLoader: " +
+                        "Cannot open '" + testFile("file_doesnt_exist.scxml") +
+                        "' for reading: .*"));
     sml->setSource(sourceNonexistent);
     QVERIFY(sml->stateMachine() == nullptr);
     QCOMPARE(smSpy.size(), 1);
