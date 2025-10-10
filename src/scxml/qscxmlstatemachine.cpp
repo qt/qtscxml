@@ -454,10 +454,8 @@ void QScxmlStateMachinePrivate::postEvent(QScxmlEvent *event)
 {
     Q_Q(QScxmlStateMachine);
 
-    if (event->eventType() == QScxmlEvent::ExternalEvent)
-        m_router.route(event->name().split(QLatin1Char('.')), event);
-
     if (event->eventType() == QScxmlEvent::ExternalEvent) {
+        m_router.route(event->name().split(QLatin1Char('.')), event);
         qCDebug(qscxmlLog) << q << "posting external event" << event->name();
         m_externalQueue.enqueue(event);
     } else {
