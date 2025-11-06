@@ -47,13 +47,11 @@ depends += qtcore qtdoc qmake qtquick qtwidgets qtgui qtqml qtscxml qtcmake
 
 headerdirs = .. \
              ../gui \
-             ../../statemachineqml \
-             ../../../examples/statemachine
+             ../../statemachineqml
 
 sourcedirs += .. \
               ../gui \
-              ../../statemachineqml \
-              ../../../examples/statemachine
+              ../../statemachineqml
 
 tagfile = qtstatemachine.tags
 
