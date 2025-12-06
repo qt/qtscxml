@@ -287,6 +287,12 @@ QScxmlScxmlService::~QScxmlScxmlService()
 }
 
 /*!
+    \class QScxmlScxmlService
+    \inmodule QtScxml
+    \internal
+*/
+
+/*!
   Creates a SCXML service wrapping \a stateMachine, invoked from
   \a parentStateMachine, as a child of \a factory.
  */

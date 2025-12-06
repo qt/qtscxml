@@ -487,11 +487,17 @@ void QScxmlStateMachinePrivate::submitDelayedEvent(QScxmlEvent *event)
 }
 
 /*!
+    \class QScxmlStateMachinePrivate
+    \inmodule QtScxml
+    \internal
+*/
+
+/*!
  * Submits an error event to the external event queue of this state machine.
  *
  * The type of the error is specified by \a type. The value of type has to begin
  * with the string \e error. For example \c {error.execution}. The message,
- * \a message, decribes the error and is passed to the event as the
+ * \a message, describes the error and is passed to the event as the
  * \c errorMessage property. The \a sendId of the message causing the error is specified, if it has
  * one.
  */
