@@ -104,20 +104,21 @@ QT_FOR_EACH_STATIC_TYPE(RETURN_METATYPENAME_STRING)
  }
 
 // -- QtScxml
-Generator::Generator(ClassDef *classDef, const QList<QByteArray> &metaTypes,
+Generator::Generator(const ClassDef *classDef, const QList<QByteArray> &metaTypes,
                      const QHash<QByteArray, QByteArray> &knownQObjectClasses,
                      const QHash<QByteArray, QByteArray> &knownGadgets,
-                     QIODevice &outfile,
-                     bool requireCompleteTypes)
-    : out(outfile),
-      cdef(classDef),
-      metaTypes(metaTypes),
-      knownQObjectClasses(knownQObjectClasses),
-      knownGadgets(knownGadgets),
-      requireCompleteTypes(requireCompleteTypes)
+                     const QHash<QByteArray, QByteArray> &hashes,
+                     QIODevice &outfile, bool requireCompleteTypes)
+     : out(outfile),
+       cdef(classDef),
+       metaTypes(metaTypes),
+       knownQObjectClasses(knownQObjectClasses),
+       knownGadgets(knownGadgets),
+       hashes(hashes),
+       requireCompleteTypes(requireCompleteTypes)
 {
-    if (cdef->superclassList.size())
-        purestSuperClass = cdef->superclassList.constFirst().classname;
+     if (cdef->superclassList.size())
+         purestSuperClass = cdef->superclassList.constFirst().classname;
 }
 // -- QtScxml
 
@@ -255,28 +256,11 @@ void Generator::generateCode()
     bool isQObject = (cdef->classname == "QObject");
     bool isConstructible = !cdef->constructorList.isEmpty();
 
-    // filter out undeclared enumerators and sets
-    {
-        QList<EnumDef> enumList;
-        for (EnumDef def : std::as_const(cdef->enumList)) {
-            if (cdef->enumDeclarations.contains(def.name)) {
-                enumList += def;
-            }
-            def.enumName = def.name;
-            QByteArray alias = cdef->flagAliases.value(def.name);
-            if (cdef->enumDeclarations.contains(alias)) {
-                def.name = alias;
-                def.flags |= cdef->enumDeclarations[alias];
-                enumList += def;
-            }
-        }
-        cdef->enumList = enumList;
-    }
-
 //
 // Register all strings used in data section
 //
     strreg(cdef->qualified);
+    strreg(hashes[cdef->qualified]);
     registerClassInfoStrings();
     registerFunctionStrings(cdef->signalList);
     registerFunctionStrings(cdef->slotList);
@@ -337,6 +321,8 @@ void Generator::generateCode()
     addEnums();
     fprintf(out, "    };\n");
 
+    fprintf(out, "    uint qt_metaObjectHashIndex = %d;\n", stridx(hashes[cdef->qualified]));
+
     const char *uintDataParams = "";
     if (isConstructible || !cdef->classInfoList.isEmpty()) {
         if (isConstructible) {
@@ -369,7 +355,7 @@ void Generator::generateCode()
         if (!requireCompleteness)
             tagType = "qt_meta_tag_" + qualifiedClassNameIdentifier +  "_t";
         fprintf(out, "    return QtMocHelpers::metaObjectData<%s, %s>(%s, qt_stringData,\n"
-                     "            qt_methods, qt_properties, qt_enums%s);\n"
+                     "            qt_methods, qt_properties, qt_enums, qt_metaObjectHashIndex%s);\n"
                      "}\n",
                 ownType, tagType.constData(), metaObjectFlags, uintDataParams);
     }
@@ -803,6 +789,10 @@ void Generator::addProperties()
             addFlag("Constant");
         if (p.final)
             addFlag("Final");
+        if (p.virtual_)
+            addFlag("Virtual");
+        if (p.override)
+            addFlag("Override");
         if (p.user != "false")
             addFlag("User");
         if (p.required)

@@ -1,6 +1,6 @@
---- .upstream/moc.cpp	2025-08-05 10:30:37.641278729 +0200
-+++ moc.cpp	2025-08-05 10:35:50.718576253 +0200
-@@ -12,15 +12,15 @@
+--- .upstream/moc.cpp	2025-12-08 08:44:49.600222497 +0100
++++ moc.cpp	2025-12-08 11:47:45.363161643 +0100
+@@ -12,19 +12,15 @@
  #include <QtCore/qdir.h>
  #include <QtCore/qjsondocument.h>
  
@@ -8,6 +8,10 @@
 -#include <private/qmetaobject_p.h>
 -#include <private/qmetaobject_moc_p.h>
 -#include <private/qduplicatetracker_p.h>
+-
+-// This is a bootstrapped tool, so we can't rely on QCryptographicHash for the
+-// faster SHA1 implementations from OpenSSL.
+-#include "../../3rdparty/sha1/sha1.cpp"
 +// -- QtScxml
 +#include <QtCore/qjsonobject.h>
 +// -- QtScxml
@@ -20,7 +24,7 @@
  // only moc needs this function
  static QByteArray normalizeType(const QByteArray &ba)
  {
-@@ -2046,6 +2046,7 @@
+@@ -2131,6 +2127,7 @@
          }
      }
  }
@@ -28,7 +32,7 @@
  
  QJsonObject ClassDef::toJson() const
  {
-@@ -2242,8 +2243,8 @@
+@@ -2329,8 +2326,8 @@
          def["alias"_L1] = QString::fromUtf8(enumName);
      if (!type.isEmpty())
          def["type"_L1] = QString::fromUtf8(type);

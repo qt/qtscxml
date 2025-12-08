@@ -1,5 +1,5 @@
---- .upstream/moc.h	2025-07-04 08:47:51.556486285 +0200
-+++ moc.h	2025-08-05 10:35:50.722576269 +0200
+--- .upstream/moc.h	2025-12-08 08:44:49.600222497 +0100
++++ moc.h	2025-12-08 11:22:49.550907139 +0100
 @@ -4,15 +4,13 @@
  #ifndef MOC_H
  #define MOC_H
@@ -68,7 +68,7 @@
  };
  Q_DECLARE_TYPEINFO(FunctionDef, Q_RELOCATABLE_TYPE);
  
-@@ -137,6 +143,10 @@
+@@ -139,6 +145,10 @@
      qsizetype location = -1; // token index, used for error reporting
  
      QJsonObject toJson() const;
@@ -79,7 +79,7 @@
  };
  Q_DECLARE_TYPEINFO(PropertyDef, Q_RELOCATABLE_TYPE);
  
-@@ -219,6 +229,7 @@
+@@ -222,6 +232,7 @@
  };
  Q_DECLARE_TYPEINFO(NamespaceDef, Q_RELOCATABLE_TYPE);
  
@@ -87,7 +87,7 @@
  class Moc : public Parser
  {
  public:
-@@ -309,6 +320,7 @@
+@@ -312,6 +323,7 @@
  
      void checkListSizes(const ClassDef &def);
  };
