@@ -68,6 +68,8 @@ bool Moc::parseClassHead(ClassDef *def)
         const QByteArrayView lex = lexemView();
         if (lex != "final" && lex != "sealed" && lex != "Q_DECL_FINAL")
             name = lexem();
+        else
+            def->isFinal = true;
     }
 
     def->qualified += name;
@@ -85,6 +87,8 @@ bool Moc::parseClassHead(ClassDef *def)
         const QByteArrayView lex = lexemView();
         if (lex != "final" && lex != "sealed" && lex != "Q_DECL_FINAL")
             return false;
+        else
+            def->isFinal = true;
     }
 
     if (test(COLON)) {
@@ -553,6 +557,7 @@ bool Moc::parseMaybeFunction(const ClassDef *cdef, FunctionDef *def)
     bool scopedFunctionName = false;
     if (test(LPAREN)) {
         def->name = def->type.name;
+        def->lineNumber = symbol().lineNum;
         scopedFunctionName = def->type.isScoped;
         if (def->name == cdef->classname) {
             def->isDestructor = tilde;
@@ -586,6 +591,7 @@ bool Moc::parseMaybeFunction(const ClassDef *cdef, FunctionDef *def)
         if (!test(LPAREN))
             return false;
         def->name = tempType.name;
+        def->lineNumber = symbol().lineNum;
         scopedFunctionName = tempType.isScoped;
     }
 
@@ -1185,6 +1191,24 @@ static QByteArrayList requiredQtContainers(const QList<ClassDef> &classes)
     return required;
 }
 
+QByteArray classDefJsonObjectHash(const QJsonObject &object)
+{
+    const QByteArray json = QJsonDocument(object).toJson(QJsonValue::JsonFormat::Compact);
+    QByteArray hash(20, 0); // SHA1 produces 160 bits of data
+
+    {
+        Sha1State state;
+        sha1InitState(&state);
+        sha1Update(&state, reinterpret_cast<const uchar *>(json.constData()), json.size());
+        sha1FinalizeState(&state);
+        sha1ToHash(&state, reinterpret_cast<uchar *>(hash.data()));
+    }
+
+    static const char revisionPrefix[] = "0$";
+    const QByteArray hashB64 = hash.toBase64(QByteArray::OmitTrailingEquals);
+    return revisionPrefix + hashB64;
+}
+
 void Moc::generate(FILE *out, FILE *jsonOutput)
 {
     QByteArrayView fn = strippedFileName();
@@ -1241,14 +1265,40 @@ void Moc::generate(FILE *out, FILE *jsonOutput)
             "#endif\n\n");
 #endif
 
+    // filter out undeclared enumerators and sets
+    for (ClassDef &cdef : classList) {
+        QList<EnumDef> enumList;
+        for (EnumDef def : std::as_const(cdef.enumList)) {
+            if (cdef.enumDeclarations.contains(def.name)) {
+                enumList += def;
+            }
+            def.enumName = def.name;
+            QByteArray alias = cdef.flagAliases.value(def.name);
+            if (cdef.enumDeclarations.contains(alias)) {
+                def.name = alias;
+                def.flags |= cdef.enumDeclarations[alias];
+                enumList += def;
+            }
+        }
+        cdef.enumList = enumList;
+    }
+
     fprintf(out, "QT_WARNING_PUSH\n");
     fprintf(out, "QT_WARNING_DISABLE_DEPRECATED\n");
     fprintf(out, "QT_WARNING_DISABLE_GCC(\"-Wuseless-cast\")\n");
 
+    QHash<QByteArray, QJsonObject> classDefJsonObjects;
+    QHash<QByteArray, QByteArray> metaObjectHashes;
+    for (const ClassDef &def : std::as_const(classList)) {
+        const QJsonObject jsonObject = def.toJson();
+        classDefJsonObjects.insert(def.qualified, jsonObject);
+        metaObjectHashes.insert(def.qualified, classDefJsonObjectHash(jsonObject));
+    }
+
     fputs("", out);
-    for (ClassDef &def : classList) {
-        Generator generator(this, &def, metaTypes, knownQObjectClasses, knownGadgets, out,
-                            requireCompleteTypes);
+    for (const ClassDef &def : std::as_const(classList)) {
+        Generator generator(this, &def, metaTypes, knownQObjectClasses, knownGadgets,
+                            metaObjectHashes, out, requireCompleteTypes);
         generator.generateCode();
 
         // generator.generateCode() should have already registered all strings
@@ -1267,12 +1317,19 @@ void Moc::generate(FILE *out, FILE *jsonOutput)
         mocData["inputFile"_L1] = QLatin1StringView(fn.constData());
 
         QJsonArray classesJsonFormatted;
+        QJsonObject hashesJsonObject;
 
-        for (const ClassDef &cdef: std::as_const(classList))
-            classesJsonFormatted.append(cdef.toJson());
+        for (const ClassDef &cdef : std::as_const(classList)) {
+            classesJsonFormatted.append(classDefJsonObjects[cdef.qualified]);
+            hashesJsonObject.insert(QString::fromLatin1(cdef.qualified),
+                                    QString::fromLatin1(metaObjectHashes[cdef.qualified]));
+        }
 
         if (!classesJsonFormatted.isEmpty())
             mocData["classes"_L1] = classesJsonFormatted;
+
+        if (!hashesJsonObject.isEmpty())
+            mocData["hashes"_L1] = hashesJsonObject;
 
         QJsonDocument jsonDoc(mocData);
         fputs(jsonDoc.toJson().constData(), jsonOutput);
@@ -1428,12 +1485,18 @@ void Moc::parsePropertyAttributes(PropertyDef &propDef)
             next(IDENTIFIER);
             propDef.name = lexem();
             continue;
+        } else if (l[0] == 'O' && l == "OVERRIDE") {
+            propDef.override = true;
+            continue;
         } else if (l[0] == 'R' && l == "REQUIRED") {
             propDef.required = true;
             continue;
         } else if (l[0] == 'R' && l == "REVISION" && test(LPAREN)) {
             prev();
             propDef.revision = parseRevision().toEncodedVersion<int>();
+            continue;
+        } else if (l[0] == 'V' && l == "VIRTUAL") {
+            propDef.virtual_ = true;
             continue;
         }
 
@@ -1538,6 +1601,24 @@ void Moc::parsePropertyAttributes(PropertyDef &propDef)
                 + " is not BINDable but default-WRITEable. WRITE will be ignored.";
         propDef.write = "";
         warning(msg.constData());
+    }
+    if (propDef.override && propDef.virtual_) {
+        const QByteArray msg = "Issue with property declaration " + propDef.name
+                + ": VIRTUAL is redundant when overriding a property. The OVERRIDE "
+                  "must only be used when actually overriding an existing property; using it on a "
+                  "new property is an error.";
+        error(msg.constData());
+    }
+    if (propDef.override && propDef.final) {
+        const QByteArray msg = "Issue with property declaration " + propDef.name
+                + ": OVERRIDE is redundant when property is marked FINAL";
+        error(msg.constData());
+    }
+    if (propDef.virtual_ && propDef.final) {
+        const QByteArray msg = "Issue with property declaration " + propDef.name
+                + ": The VIRTUAL cannot be combined with FINAL, as these attributes are mutually "
+                  "exclusive";
+        error(msg.constData());
     }
 }
 
@@ -2054,6 +2135,8 @@ QJsonObject ClassDef::toJson() const
     cls["className"_L1] = QString::fromUtf8(classname.constData());
     cls["qualifiedClassName"_L1] = QString::fromUtf8(qualified.constData());
     cls["lineNumber"_L1] = lineNumber;
+    if (isFinal)
+        cls["final"_L1] = true;
 
     QJsonArray classInfos;
     for (const auto &info: std::as_const(classInfoList)) {

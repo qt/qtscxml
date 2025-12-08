@@ -1,5 +1,5 @@
---- .upstream/generator.cpp	2025-06-23 08:04:34.541288406 +0200
-+++ generator.cpp	2025-08-05 10:52:45.130291770 +0200
+--- .upstream/generator.cpp	2025-12-08 08:44:49.600222497 +0100
++++ generator.cpp	2025-12-08 11:36:34.441647201 +0100
 @@ -4,7 +4,9 @@
  // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR GPL-3.0-only WITH Qt-GPL-exception-1.0
  
@@ -40,45 +40,40 @@
  static int nameToBuiltinType(const QByteArray &name)
  {
      if (name.isEmpty())
-@@ -78,21 +103,23 @@
+@@ -78,23 +103,24 @@
      return nullptr;
   }
  
-- Generator::Generator(Moc *moc, ClassDef *classDef, const QList<QByteArray> &metaTypes,
+- Generator::Generator(Moc *moc, const ClassDef *classDef, const QList<QByteArray> &metaTypes,
 -                      const QHash<QByteArray, QByteArray> &knownQObjectClasses,
--                      const QHash<QByteArray, QByteArray> &knownGadgets, FILE *outfile,
--                      bool requireCompleteTypes)
+-                      const QHash<QByteArray, QByteArray> &knownGadgets,
+-                      const QHash<QByteArray, QByteArray> &hashes,
+-                      FILE *outfile, bool requireCompleteTypes)
 -     : parser(moc),
 -       out(outfile),
--       cdef(classDef),
--       metaTypes(metaTypes),
--       knownQObjectClasses(knownQObjectClasses),
--       knownGadgets(knownGadgets),
--       requireCompleteTypes(requireCompleteTypes)
-- {
--     if (cdef->superclassList.size())
--         purestSuperClass = cdef->superclassList.constFirst().classname;
 +// -- QtScxml
-+Generator::Generator(ClassDef *classDef, const QList<QByteArray> &metaTypes,
++Generator::Generator(const ClassDef *classDef, const QList<QByteArray> &metaTypes,
 +                     const QHash<QByteArray, QByteArray> &knownQObjectClasses,
 +                     const QHash<QByteArray, QByteArray> &knownGadgets,
-+                     QIODevice &outfile,
-+                     bool requireCompleteTypes)
-+    : out(outfile),
-+      cdef(classDef),
-+      metaTypes(metaTypes),
-+      knownQObjectClasses(knownQObjectClasses),
-+      knownGadgets(knownGadgets),
-+      requireCompleteTypes(requireCompleteTypes)
++                     const QHash<QByteArray, QByteArray> &hashes,
++                     QIODevice &outfile, bool requireCompleteTypes)
++     : out(outfile),
+        cdef(classDef),
+        metaTypes(metaTypes),
+        knownQObjectClasses(knownQObjectClasses),
+        knownGadgets(knownGadgets),
+        hashes(hashes),
+        requireCompleteTypes(requireCompleteTypes)
+- {
 +{
-+    if (cdef->superclassList.size())
-+        purestSuperClass = cdef->superclassList.constFirst().classname;
+      if (cdef->superclassList.size())
+          purestSuperClass = cdef->superclassList.constFirst().classname;
  }
 +// -- QtScxml
  
  static inline qsizetype lengthOfEscapeSequence(const QByteArray &s, qsizetype i)
  {
-@@ -119,7 +146,7 @@
+@@ -121,7 +147,7 @@
  
  // Prints \a s to \a out, breaking it into lines of at most ColumnWidth. The
  // opening and closing quotes are NOT included (it's up to the caller).
@@ -87,7 +82,7 @@
  {
      static constexpr int ColumnWidth = 68;
      const qsizetype len = s.size();
-@@ -263,8 +290,10 @@
+@@ -248,8 +274,10 @@
      bool hasStaticMetaCall =
              (cdef->hasQObject || !cdef->methodList.isEmpty()
               || !cdef->propertyList.isEmpty() || !cdef->constructorList.isEmpty());
@@ -98,7 +93,7 @@
  
      const QByteArray qualifiedClassNameIdentifier = generateQualifiedClassNameIdentifier(cdef->qualified);
  
-@@ -525,8 +554,10 @@
+@@ -512,8 +540,10 @@
      }
      fprintf(out, "}\n");
  
@@ -109,7 +104,7 @@
  
  //
  // Generate internal qt_metacall()  function
-@@ -542,7 +573,9 @@
+@@ -529,7 +559,9 @@
  //
  // Generate plugin meta data
  //
@@ -119,7 +114,7 @@
  
  //
  // Generate function to make sure the non-class signals exist in the parent classes
-@@ -1011,6 +1044,13 @@
+@@ -1002,6 +1034,13 @@
              const FunctionDef &f = methodList.at(methodindex);
              Q_ASSERT(!f.normalizedType.isEmpty());
              fprintf(out, "        case %d: ", methodindex);
@@ -133,7 +128,7 @@
              if (f.normalizedType != "void")
                  fprintf(out, "{ %s _r = ", disambiguatedTypeName(noRef(f.normalizedType)).constData());
              fprintf(out, "_t->");
-@@ -1087,6 +1127,10 @@
+@@ -1078,6 +1117,10 @@
              const FunctionDef &f = cdef->signalList.at(methodindex);
              if (f.wasCloned || !f.inPrivateClass.isEmpty() || f.isStatic)
                  continue;
@@ -144,7 +139,7 @@
              fprintf(out, "        if (QtMocHelpers::indexOfMethod<%s (%s::*)(",
                      f.type.rawName.constData() , cdef->classname.constData());
  
-@@ -1105,7 +1149,7 @@
+@@ -1096,7 +1139,7 @@
              }
              fprintf(out, ")%s>(_a, &%s::%s, %d))\n",
                      f.isConst ? " const" : "",
@@ -153,7 +148,7 @@
              fprintf(out, "            return;\n");
          }
          fprintf(out, "    }\n");
-@@ -1182,9 +1226,12 @@
+@@ -1173,9 +1216,12 @@
                              propindex, cxxTypeTag(p.typeTag), disambiguatedTypeName(p.type, p.typeTag).constData(),
                              prefix.constData(), p.bind.constData());
                  else if (!p.read.isEmpty())
@@ -168,7 +163,7 @@
                  else
                      fprintf(out, "        case %d: *reinterpret_cast<%s%s*>(_v) = %s%s; break;\n",
                              propindex, cxxTypeTag(p.typeTag), disambiguatedTypeName(p.type, p.typeTag).constData(),
-@@ -1303,6 +1350,10 @@
+@@ -1294,6 +1340,10 @@
  {
      if (def->wasCloned || def->isAbstract)
          return;
@@ -179,7 +174,7 @@
      fprintf(out, "\n// SIGNAL %d\n%s %s::%s(",
              index, def->type.name.constData(), cdef->qualified.constData(), def->name.constData());
  
-@@ -1364,6 +1415,36 @@
+@@ -1355,6 +1405,36 @@
      fprintf(out, "}\n");
  }
  
@@ -216,7 +211,7 @@
  static CborError jsonValueToCbor(CborEncoder *parent, const QJsonValue &v);
  static CborError jsonObjectToCbor(CborEncoder *parent, const QJsonObject &o)
  {
-@@ -1491,6 +1572,8 @@
+@@ -1482,6 +1562,8 @@
  
      fputs("\n", out);
  }
@@ -225,7 +220,7 @@
  
  QByteArray Generator::disambiguatedTypeName(const QByteArray &name)
  {
-@@ -1524,4 +1607,6 @@
+@@ -1515,4 +1597,6 @@
  
  QT_END_NAMESPACE
  

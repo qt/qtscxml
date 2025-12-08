@@ -136,6 +136,8 @@ struct PropertyDef
     TypeTags typeTag;
     bool constant = false;
     bool final = false;
+    bool virtual_ = false;
+    bool override = false;
     bool required = false;
     int relativeIndex = -1; // property index in current metaobject
     int lineNumber = 0;
@@ -217,6 +219,7 @@ struct ClassDef : BaseDef {
     bool hasQGadget = false;
     bool hasQNamespace = false;
     bool requireCompleteMethodTypes = false;
+    bool isFinal = false;
 
     QJsonObject toJson() const;
 };
@@ -305,7 +308,7 @@ public:
     QByteArray lexemUntil(Token);
     bool until(Token);
 
-    // test for Q_INVOCABLE, Q_SCRIPTABLE, etc. and set the flags
+    // test for Q_INVOKABLE, Q_SCRIPTABLE, etc. and set the flags
     // in FunctionDef accordingly
     bool testFunctionAttribute(FunctionDef *def);
     bool testFunctionAttribute(Token tok, FunctionDef *def);
