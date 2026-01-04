@@ -24,6 +24,8 @@
 
 #include <functional>
 
+using namespace Qt::StringLiterals;
+
 namespace {
 enum {
     DebugHelper_NameTransitions = 0
@@ -1520,7 +1522,7 @@ bool QScxmlCompilerPrivate::preReadElementTransition()
     transition->events = attributes.value(QLatin1String("event")).toString().split(QLatin1Char(' '), Qt::SkipEmptyParts);
     transition->targets = attributes.value(QLatin1String("target")).toString().split(QLatin1Char(' '), Qt::SkipEmptyParts);
     if (attributes.hasAttribute(QStringLiteral("cond")))
-        transition->condition.reset(new QString(attributes.value(QLatin1String("cond")).toString()));
+        transition->condition = QString(attributes.value("cond"_L1).toString());
     QStringView type = attributes.value(QLatin1String("type"));
     if (type.isEmpty() || type == QLatin1String("external")) {
         transition->type = DocumentModel::Transition::External;

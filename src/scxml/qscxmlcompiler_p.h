@@ -27,6 +27,7 @@
 #include <QtCore/private/qglobal_p.h>
 
 #include <memory>
+#include <optional>
 
 QT_BEGIN_NAMESPACE
 
@@ -284,7 +285,7 @@ struct Transition: public StateOrTransition
 {
     enum Type { Internal, External, Synthetic };
     QStringList events;
-    QScopedPointer<QString> condition;
+    std::optional<QString> condition;
     QStringList targets;
     InstructionSequence instructionsOnTransition;
     Type type;

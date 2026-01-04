@@ -358,7 +358,7 @@ protected: // visitor
         if (transition->condition) {
             newTransition.condition = createEvaluatorBool(QStringLiteral("transition"),
                                                           QStringLiteral("cond"),
-                                                          *transition->condition.data());
+                                                          *transition->condition);
         }
 
         switch (transition->type) {
