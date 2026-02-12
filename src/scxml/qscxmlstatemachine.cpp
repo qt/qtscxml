@@ -1753,7 +1753,7 @@ QBindable<QScxmlTableData*> QScxmlStateMachine::bindableTableData()
 }
 
 /*!
-    \qmlmethod ScxmlStateMachine::stateNames(bool compress)
+    \qmlmethod list<string> ScxmlStateMachine::stateNames(bool compress)
 
     Retrieves a list of state names of all states.
 
@@ -1794,7 +1794,7 @@ QStringList QScxmlStateMachine::stateNames(bool compress) const
 }
 
 /*!
-    \qmlmethod ScxmlStateMachine::activeStateNames(bool compress)
+    \qmlmethod list<string> ScxmlStateMachine::activeStateNames(bool compress)
 
     Retrieves a list of state names of all active states.
 
@@ -1825,7 +1825,7 @@ QStringList QScxmlStateMachine::activeStateNames(bool compress) const
 }
 
 /*!
-    \qmlmethod ScxmlStateMachine::isActive(string scxmlStateName)
+    \qmlmethod bool ScxmlStateMachine::isActive(string scxmlStateName)
 
     Returns \c true if the state specified by \a scxmlStateName is active,
     \c false otherwise.
@@ -1921,7 +1921,7 @@ QMetaObject::Connection QScxmlStateMachine::connectToEventImpl(const QString &sc
 }
 
 /*!
-    \qmlmethod ScxmlStateMachine::init()
+    \qmlmethod bool ScxmlStateMachine::init()
 
     Initializes the state machine by setting the initial values for \c <data>
     elements and executing any \c <script> tags of the \c <scxml> tag. The
@@ -2010,7 +2010,7 @@ QString QScxmlStateMachine::name() const
 }
 
 /*!
-    \qmlmethod ScxmlStateMachine::submitEvent(event)
+    \qmlmethod void ScxmlStateMachine::submitEvent(event)
 
     Submits the SCXML event \a event to the internal or external event queue
     depending on the priority of the event.
@@ -2063,7 +2063,7 @@ void QScxmlStateMachine::submitEvent(const QString &eventName)
     submitEvent(e);
 }
 /*!
-    \qmlmethod ScxmlStateMachine::submitEvent(string eventName, var data)
+    \qmlmethod void ScxmlStateMachine::submitEvent(string eventName, var data)
 
     A utility method to create and submit an external event with the specified
     \a eventName as the name and \a data as the payload data (optional).
@@ -2083,7 +2083,7 @@ void QScxmlStateMachine::submitEvent(const QString &eventName, const QVariant &d
 }
 
 /*!
-    \qmlmethod ScxmlStateMachine::cancelDelayedEvent(string sendId)
+    \qmlmethod void ScxmlStateMachine::cancelDelayedEvent(string sendId)
 
     Cancels a delayed event with the specified \a sendId.
 */
@@ -2109,7 +2109,7 @@ void QScxmlStateMachine::cancelDelayedEvent(const QString &sendId)
 }
 
 /*!
-    \qmlmethod ScxmlStateMachine::isDispatchableTarget(string target)
+    \qmlmethod bool ScxmlStateMachine::isDispatchableTarget(string target)
 
     Returns \c true if a message to \a target can be dispatched by this state
     machine.
@@ -2244,7 +2244,7 @@ QBindable<QList<QScxmlInvokableService*>> QScxmlStateMachine::bindableInvokedSer
 */
 
 /*!
-    \qmlmethod ScxmlStateMachine::start()
+    \qmlmethod void ScxmlStateMachine::start()
 
     Starts this state machine. The machine resets its configuration and
     transitions to the initial state. When a final top-level state
@@ -2288,7 +2288,7 @@ void QScxmlStateMachine::start()
 }
 
 /*!
-    \qmlmethod ScxmlStateMachine::stop()
+    \qmlmethod void ScxmlStateMachine::stop()
 
     Stops this state machine. The machine will not execute any further state
     transitions. Its \l running property is set to \c false.
