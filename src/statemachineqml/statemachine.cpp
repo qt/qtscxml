@@ -172,7 +172,7 @@ QBindable<QQmlListProperty<QObject>> StateMachine::bindableChildren() const
 
 
 /*!
-    \qmlmethod StateMachine::start()
+    \qmlmethod void StateMachine::start()
 
     Starts this state machine.  The machine will reset its configuration and
     transition to the initial state.  When a final top-level state (FinalState)
@@ -195,7 +195,7 @@ QBindable<QQmlListProperty<QObject>> StateMachine::bindableChildren() const
 */
 
 /*!
-    \qmlmethod StateMachine::stop()
+    \qmlmethod void StateMachine::stop()
 
     Stops this state machine.  The state machine will stop processing events
     and then emit the stopped signal.
