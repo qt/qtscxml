@@ -814,15 +814,13 @@ QString CppDumper::generateMetaObject(const QString &className,
     knownQObjectClasses.insert(QByteArray("QScxmlStateMachine"), QByteArray());
 
     QHash<QByteArray, QJsonObject> classDefJsonObjects;
-    QHash<QByteArray, QByteArray> metaObjectHashes;
     const QJsonObject jsonObject = classDef.toJson();
     classDefJsonObjects.insert(classDef.qualified, jsonObject);
-    metaObjectHashes.insert(classDef.qualified, classDefJsonObjectHash(jsonObject));
 
     QBuffer buf;
     buf.open(QIODevice::WriteOnly);
     Generator generator(&classDef, QList<QByteArray>(), knownQObjectClasses,
-                        QHash<QByteArray, QByteArray>(), metaObjectHashes, buf);
+                        QHash<QByteArray, QByteArray>(), buf);
     generator.generateCode();
     if (m_translationUnit->stateMethods) {
         generator.generateAccessorDefs();

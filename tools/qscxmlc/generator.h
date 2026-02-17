@@ -24,7 +24,6 @@ public:
     Generator(const ClassDef *classDef, const QList<QByteArray> &metaTypes,
               const QHash<QByteArray, QByteArray> &knownQObjectClasses,
               const QHash<QByteArray, QByteArray> &knownGadgets,
-              const QHash<QByteArray, QByteArray> &hashes,
               QIODevice &outfile, // -- QtScxml
               bool requireCompleteTypes = false);
     void generateCode();
@@ -68,7 +67,6 @@ private:
     QList<QByteArray> metaTypes;
     QHash<QByteArray, QByteArray> knownQObjectClasses;
     QHash<QByteArray, QByteArray> knownGadgets;
-    QHash<QByteArray, QByteArray> hashes;
     bool requireCompleteTypes;
 };
 
