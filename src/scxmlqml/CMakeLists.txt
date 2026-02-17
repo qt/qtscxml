@@ -17,7 +17,7 @@ qt_internal_add_qml_module(ScxmlQml
     DEFINES
         QT_BUILD_SCXMLQML_LIB
     DEPENDENCIES
-        QtQml
+        QtQml/auto
     PUBLIC_LIBRARIES
         Qt::Core
         Qt::Qml
