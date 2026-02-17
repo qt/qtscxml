@@ -20,7 +20,7 @@ qt_internal_add_qml_module(StateMachineQml
     DEFINES
         QT_BUILD_STATEMACHINEQML_LIB
     DEPENDENCIES
-        QtQml
+        QtQml/auto
     PUBLIC_LIBRARIES
         Qt::Core
         Qt::Qml
