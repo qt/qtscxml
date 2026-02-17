@@ -595,6 +595,41 @@ bool Moc::parseMaybeFunction(const ClassDef *cdef, FunctionDef *def)
         scopedFunctionName = tempType.isScoped;
     }
 
+    if (!test(RPAREN)) {
+        parseFunctionArguments(def);
+        if (!test(RPAREN))
+            return false;
+    }
+
+    def->isConst = test(CONST);
+
+    while (test(IDENTIFIER))
+        ;
+
+    if (test(THROW)) {
+        next(LPAREN);
+        until(RPAREN);
+    }
+
+    if (def->type.name == "auto" && test(ARROW))
+        def->type = parseType(); // Parse trailing return-type
+
+    if (scopedFunctionName
+        && (def->isSignal || def->isSlot || def->isInvokable)) {
+        const QByteArray msg = "parsemaybe: Function declaration " + def->name
+                + " contains extra qualification. Ignoring as signal or slot.";
+        warning(msg.constData());
+        return false;
+    }
+
+    if (def->isSlot || def->isSignal || def->isInvokable) {
+        QList<QByteArray> typeNameParts = normalizeType(def->type.name).split(' ');
+        if (typeNameParts.contains("auto")) {
+            // We expected a trailing return type but we haven't seen one
+            error("Function declared with auto as return type but missing trailing return type. "
+                  "Return type deduction is not supported.");
+        }
+    }
     // we don't support references as return types, it's too dangerous
     if (def->type.referenceType == Type::Reference) {
         QByteArray rawName = def->type.rawName;
@@ -603,20 +638,6 @@ bool Moc::parseMaybeFunction(const ClassDef *cdef, FunctionDef *def)
     }
 
     def->normalizedType = normalizeType(def->type.name);
-
-    if (!test(RPAREN)) {
-        parseFunctionArguments(def);
-        if (!test(RPAREN))
-            return false;
-    }
-    def->isConst = test(CONST);
-    if (scopedFunctionName
-        && (def->isSignal || def->isSlot || def->isInvokable)) {
-        const QByteArray msg = "parsemaybe: Function declaration " + def->name
-                + " contains extra qualification. Ignoring as signal or slot.";
-        warning(msg.constData());
-        return false;
-    }
     return true;
 }
 
@@ -1191,24 +1212,6 @@ static QByteArrayList requiredQtContainers(const QList<ClassDef> &classes)
     return required;
 }
 
-QByteArray classDefJsonObjectHash(const QJsonObject &object)
-{
-    const QByteArray json = QJsonDocument(object).toJson(QJsonValue::JsonFormat::Compact);
-    QByteArray hash(20, 0); // SHA1 produces 160 bits of data
-
-    {
-        Sha1State state;
-        sha1InitState(&state);
-        sha1Update(&state, reinterpret_cast<const uchar *>(json.constData()), json.size());
-        sha1FinalizeState(&state);
-        sha1ToHash(&state, reinterpret_cast<uchar *>(hash.data()));
-    }
-
-    static const char revisionPrefix[] = "0$";
-    const QByteArray hashB64 = hash.toBase64(QByteArray::OmitTrailingEquals);
-    return revisionPrefix + hashB64;
-}
-
 void Moc::generate(FILE *out, FILE *jsonOutput)
 {
     QByteArrayView fn = strippedFileName();
@@ -1287,18 +1290,10 @@ void Moc::generate(FILE *out, FILE *jsonOutput)
     fprintf(out, "QT_WARNING_DISABLE_DEPRECATED\n");
     fprintf(out, "QT_WARNING_DISABLE_GCC(\"-Wuseless-cast\")\n");
 
-    QHash<QByteArray, QJsonObject> classDefJsonObjects;
-    QHash<QByteArray, QByteArray> metaObjectHashes;
-    for (const ClassDef &def : std::as_const(classList)) {
-        const QJsonObject jsonObject = def.toJson();
-        classDefJsonObjects.insert(def.qualified, jsonObject);
-        metaObjectHashes.insert(def.qualified, classDefJsonObjectHash(jsonObject));
-    }
-
     fputs("", out);
     for (const ClassDef &def : std::as_const(classList)) {
-        Generator generator(this, &def, metaTypes, knownQObjectClasses, knownGadgets,
-                            metaObjectHashes, out, requireCompleteTypes);
+        Generator generator(this, &def, metaTypes, knownQObjectClasses, knownGadgets, out,
+                            requireCompleteTypes);
         generator.generateCode();
 
         // generator.generateCode() should have already registered all strings
@@ -1317,19 +1312,12 @@ void Moc::generate(FILE *out, FILE *jsonOutput)
         mocData["inputFile"_L1] = QLatin1StringView(fn.constData());
 
         QJsonArray classesJsonFormatted;
-        QJsonObject hashesJsonObject;
 
-        for (const ClassDef &cdef : std::as_const(classList)) {
-            classesJsonFormatted.append(classDefJsonObjects[cdef.qualified]);
-            hashesJsonObject.insert(QString::fromLatin1(cdef.qualified),
-                                    QString::fromLatin1(metaObjectHashes[cdef.qualified]));
-        }
+        for (const ClassDef &cdef: std::as_const(classList))
+            classesJsonFormatted.append(cdef.toJson());
 
         if (!classesJsonFormatted.isEmpty())
             mocData["classes"_L1] = classesJsonFormatted;
-
-        if (!hashesJsonObject.isEmpty())
-            mocData["hashes"_L1] = hashesJsonObject;
 
         QJsonDocument jsonDoc(mocData);
         fputs(jsonDoc.toJson().constData(), jsonOutput);
@@ -2307,6 +2295,8 @@ QJsonObject PropertyDef::toJson() const
 
     prop["constant"_L1] = constant;
     prop["final"_L1] = final;
+    prop["virtual"_L1] = virtual_;
+    prop["override"_L1] = override;
     prop["required"_L1] = required;
     prop["index"_L1] = relativeIndex;
     prop["lineNumber"_L1] = lineNumber;
