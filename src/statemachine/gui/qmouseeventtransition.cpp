@@ -145,7 +145,7 @@ QPainterPath QMouseEventTransition::hitTestPath() const
 /*!
   Sets the hit test path for this mouse event transition to \a path.
   If a valid path has been set, the transition will only trigger if the mouse
-  event position (QMouseEvent::pos()) is inside the path.
+  event position (QMouseEvent::position()) is inside the path.
 
   \sa QPainterPath::contains()
 */
