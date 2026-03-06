@@ -22,6 +22,8 @@
     The state machine has the following states:
 
     \image ftpclient-statechart.png
+           {FTP client statechart with I, S, F, P states and B, W subsystems
+           for login and transfer workflows}
 
     \list
         \li \e I as the initial state.

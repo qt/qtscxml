@@ -29,6 +29,7 @@
   machine is in state \c s1. The statechart for this machine is as follows:
 
     \image statemachine-button.png
+           {Three states s1, s2, s3 cycling on button clicked transitions}
 
   The following snippet shows the code needed to create such a state machine.
   First, we create the state machine and states:
@@ -103,6 +104,8 @@
   state. The following diagram shows the new state machine.
 
     \image statemachine-button-nested.png
+           {State s1 containing three substates s11, s12, s13 cycling on
+           button clicked transitions}
 
   The three original states have been renamed \c s11, \c s12 and \c s13 to
   reflect that they are now children of the new top-level state, \c s1.  Child
@@ -158,6 +161,8 @@
   has been added.
 
     \image statemachine-button-history.png
+           {State s1 with substates and history state, interrupt button
+           transitions to s3, which returns to s1 history when finished}
 
   The following code shows how it can be implemented; in this example we
   simply display a message box when \c s3 is entered, then immediately return
@@ -174,6 +179,8 @@
   move between all possible combinations.
 
     \image statemachine-nonparallel.png
+           {Four states: clean/not moving, clean/moving, dirty/not moving,
+           dirty/moving with started, stopped, cleaned, soiled transitions}
 
   If we added a third property (say, Red vs Blue), the total number of states
   would double, to eight; and if we added a fourth property (say, Enclosed vs
@@ -185,6 +192,8 @@
   any of their sibling states.
 
     \image statemachine-parallel.png
+           {Parallel state s1 with regions s11 (clean/dirty) and s12
+           (moving/not moving)}
 
   To create a parallel state group, pass QState::ParallelStates to the QState
   constructor.
@@ -213,6 +222,8 @@
   before entering a final state:
 
     \image statemachine-finished.png
+           {State s1 with processing substate transitioning to final state,
+           triggering move to s2}
 
   When \c s1 's final state is entered, \c s1 will automatically emit
   \l {QState::}{finished()}. We use a signal transition to cause this event to trigger a
@@ -297,6 +308,7 @@
   The following is a statechart that uses the custom event and transition:
 
     \image statemachine-customevents.png
+           {States s1 and s2 with StringTransition for custom event handling}
 
   Here's what the implementation of the statechart looks like:
 
@@ -312,6 +324,8 @@
   following statechart:
 
     \image statemachine-customevents2.png
+           {State s1 with substates s11 and s12, custom event transitions,
+           and celebrate state on completion}
 
   For deeply nested statecharts, you can add such "fallback" transitions at
   the level of granularity that's most appropriate.

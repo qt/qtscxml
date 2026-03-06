@@ -10,6 +10,8 @@
     \brief Invokes a compiled nested state machine.
 
     \image invoke.png
+           {Window with four panels: Go Nowhere, Go Somewhere, Go There,
+           and Go Here}
 
     \e{Invoke} demonstrates how to use the \c <invoke> element
     with generated nested state-machines, where the SCXML file is compiled to

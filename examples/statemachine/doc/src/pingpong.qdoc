@@ -14,6 +14,8 @@
     posting events to the state machine. The state chart looks as follows:
 
     \image pingpong-example.png
+           {Two parallel states: pinger posts ping on entry and responds to pong,
+           ponger responds to ping by posting pong}
 
     The \c pinger and \c ponger states are parallel states, i.e. they are
     entered simultaneously and will take transitions independently of

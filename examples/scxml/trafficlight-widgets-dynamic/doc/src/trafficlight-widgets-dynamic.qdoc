@@ -10,7 +10,7 @@
     \brief A widget-based application that uses a dynamically loaded state
      machine to implement a traffic light.
 
-    \image trafficlight.png
+    \image trafficlight.png {Traffic light with green light illuminated}
 
     \e{Traffic Light} demonstrates how to connect to the
     active properties of a state in a dynamically loaded state machine.

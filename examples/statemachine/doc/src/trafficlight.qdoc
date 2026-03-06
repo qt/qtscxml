@@ -10,7 +10,7 @@
     \brief The Traffic Light example shows how to use \l{Qt State Machine Overview}
     to implement the control flow of a traffic light.
 
-    \image trafficlight-example.png
+    \image trafficlight-example.png {Traffic light with green light illuminated}
 
     In this example we write a TrafficLightWidget class. The traffic light has
     three lights: Red, yellow and green. The traffic light transitions from
@@ -38,6 +38,8 @@
     LightState to another. Here is the statechart for the light state:
 
     \image trafficlight-example1.png
+           {LightState with timing substate: entry turns light on and starts
+           timer, exit turns off, timeout transitions to final state}
 
     \snippet trafficlight/main.cpp 3
 
@@ -49,6 +51,8 @@
     This is what the statechart looks like:
 
     \image trafficlight-example2.png
+           {Traffic light cycle: redGoingYellow, yellowGoingGreen,
+           greenGoingYellow, yellowGoingRed}
 
     \snippet trafficlight/main.cpp 4
 

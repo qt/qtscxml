@@ -9,6 +9,7 @@
     \meta tag {state machine}
 
     \image mediaplayer.png
+           {Media player with song list on left and Stopped status on right}
 
     \brief Sends data to and receives it from a C++ data model.
 
