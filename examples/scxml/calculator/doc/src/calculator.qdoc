@@ -9,6 +9,7 @@
     \meta tag {state machine}
 
     \image calculator.png
+           {Calculator with numeric display, operator buttons, and digit buttons}
 
     \brief An application that implements the Calculator example
     presented in the SCXML Specification.

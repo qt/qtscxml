@@ -66,6 +66,7 @@
   different states in our example.
 
   \image statemachine-button.png
+         {Three states s1, s2, s3 cycling on button.clicked transitions}
 
   The following snippet shows the code needed to create such a state machine.
 
@@ -102,6 +103,8 @@
   state. The following diagram shows the new state machine.
 
     \image statemachine-button-nested.png
+           {State s1 containing three substates s11, s12, s13 cycling on
+           button.clicked transitions}
 
   The three original states have been renamed \c s11, \c s12 and \c s13 to
   reflect that they are now childrens of the new top-level state, \c s1.  Child
@@ -154,6 +157,8 @@
   has been added.
 
     \image statemachine-button-history.png
+           {State s1 with substates and history state, interrupt button
+           transitions to s3, which returns to s1 history when finished}
 
   The following code shows how it can be implemented; in this example we
   simply display a message box when \c s3 is entered, then immediately return
@@ -170,6 +175,8 @@
   move between all possible combinations as shown in the following state chart.
 
     \image statemachine-nonparallel.png
+           {Four states: clean/not moving, clean/moving, dirty/not moving,
+           dirty/moving with started, stopped, cleaned, soiled transitions}
 
   If we added a third property (say, Red vs Blue), the total number of states
   would double, to eight; and if we added a fourth property (say, Enclosed vs
@@ -182,6 +189,8 @@
   chart shows the different paralles states for the car example.
 
     \image statemachine-parallel.png
+           {Parallel state s1 with regions s11 (clean/dirty) and s12
+           (moving/not moving)}
 
   To create a parallel state group, set childMode to QState.ParallelStates.
 
@@ -221,6 +230,8 @@
   before entering a final state:
 
     \image statemachine-finished.png
+           {State s1 with processing substate transitioning to final state,
+           triggering move to s2}
 
   When \c s1 's final state is entered, \c s1 will automatically emit
   \l{State::finished}{finished}. We use a signal transition to cause this event to

@@ -11,6 +11,7 @@
     handling.
 
     \image rogue-example.png
+           {Text-based game with player @ navigating grid of dots and walls #}
 
     This example implements a simple text based game. Do you see the
     \c{@} in the screenshot? That's you, the rogue. The \c{#}
@@ -54,6 +55,8 @@
     that shows what we want to achieve:
 
     \image rogue-statechart.png
+           {Input State and Quit State: q transitions to Quit, n loops back,
+           y exits to final state}
 
     The input state waits for a key press to start a new command.
     When receiving a key it recognizes, it transitions to one of the

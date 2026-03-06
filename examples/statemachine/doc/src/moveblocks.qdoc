@@ -10,7 +10,7 @@
     \brief The Move Blocks example shows how to animate items in a
     QGraphicsScene using a QStateMachine with a custom transition.
 
-    \image moveblocks-example.png
+    \image moveblocks-example.png {Four blue squares on black background}
 
     The example animates the blue blocks that you can see in the image
     above. The animation moves the blocks between four preset positions.
@@ -47,6 +47,8 @@
     trying to build.
 
     \image move-blocks-chart.png
+           {StateSwitcher controlling transitions in Group State with State1,
+           State2, and State3}
 
     Note that the \c group has seven sub states, but we have only
     included three of them in the diagram. The code that builds this
