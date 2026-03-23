@@ -48,6 +48,9 @@ QScxmlEventConnection::QScxmlEventConnection(QObject *parent) :
 {
 }
 
+QScxmlEventConnection::~QScxmlEventConnection()
+    = default;
+
 QStringList QScxmlEventConnection::events() const
 {
     return m_events;
