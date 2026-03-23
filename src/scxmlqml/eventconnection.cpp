@@ -94,7 +94,7 @@ QBindable<QScxmlStateMachine*> QScxmlEventConnection::bindableStateMachine()
 
 void QScxmlEventConnection::doConnect()
 {
-    for (const QMetaObject::Connection &connection : std::as_const(m_connections))
+    for (QMetaObject::Connection &connection : m_connections)
         disconnect(connection);
     m_connections.clear();
     const auto stateMachine = m_stateMachine.valueBypassingBindings();
