@@ -23,7 +23,9 @@
 #include <QtCore/qobject.h>
 #include <QtQml/qqmlparserstatus.h>
 #include <QtQml/qqml.h>
+
 #include "QtCore/qproperty.h"
+#include <QtCore/qvarlengtharray.h>
 #include <private/qproperty_p.h>
 
 QT_BEGIN_NAMESPACE
@@ -74,7 +76,7 @@ private:
                              &QScxmlEventConnection::setEvents,
                              &QScxmlEventConnection::eventsChanged);
 
-    QList<QMetaObject::Connection> m_connections;
+    QVarLengthArray<QMetaObject::Connection, 4> m_connections;
 
     void doConnect();
     void classBegin() override;
