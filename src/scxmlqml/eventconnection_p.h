@@ -50,6 +50,7 @@ class Q_SCXMLQML_EXPORT QScxmlEventConnection : public QObject, public QQmlParse
 
 public:
     QScxmlEventConnection(QObject *parent = nullptr);
+    ~QScxmlEventConnection() override;
 
     QStringList events() const;
     void setEvents(const QStringList &events);
