@@ -54,8 +54,8 @@ SPDX-FileCopyrightText = "Copyright (C) The Qt Company Ltd."
 SPDX-License-Identifier = "LicenseRef-Qt-Commercial OR BSD-3-Clause"
 
 [[annotations]]
-path = ["**/README*", "**.qdocconf", "tools/qscxmlc/moc_patches/*.patch", "**.qdocinc",
-        "**/doc/images/**", "**/doc/src/images/**"]
+path = ["**.qdocconf", "**.qdocinc", "**/doc/images/**", "**/doc/src/images/**",
+        "**/README*", "CONTRIBUTING.md", "tools/qscxmlc/moc_patches/*.patch"]
 comment = "documentation"
 precedence = "closest"
 SPDX-FileCopyrightText = "Copyright (C) The Qt Company Ltd."
