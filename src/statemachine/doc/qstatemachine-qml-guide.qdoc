@@ -26,10 +26,10 @@
 
   \section1 Using Both QtQuick and QtQml.StateMachine Imports
 
-  \warning If you're attempting to import both \l{QtQuick} and
+  \warning If you're attempting to import both \l[QML]{QtQuick} and
     \e{QtQml.StateMachine} in one single QML file, make sure to import
     \e{QtQml.StateMachine} \e{last}. This way, the \e{State} type is provided
-    by the Declarative State Machine Framework and not by \l{QtQuick}:
+    by the Declarative State Machine Framework and not by \l[QML]{QtQuick}:
 
   \qml
     import QtQuick
@@ -43,7 +43,7 @@
   \endqml
 
   Alternatively, you can import \e{QtQml.StateMachine} into a separate
-  namespace to avoid any ambiguity with QtQuick's \e{State} item:
+  namespace to avoid any ambiguity with \l[QML]{QtQuick}'s \e{State} item:
 
   \qml \QtMinorVersion
     import QtQuick
