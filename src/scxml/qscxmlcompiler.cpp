@@ -371,7 +371,6 @@ private:
     {
         const auto &allChildren = allChildrenOfContainer(container);
 
-        QList<DocumentModel::AbstractState *> childStates;
         for (DocumentModel::StateOrTransition *child : std::as_const(allChildren)) {
             if (DocumentModel::State *s = child->asState())
                 return s;
