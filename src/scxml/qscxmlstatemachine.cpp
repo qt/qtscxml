@@ -612,7 +612,7 @@ void QScxmlStateMachinePrivate::processEvents()
     }
 
     if (!m_statesToInvoke.empty()) {
-        for (int stateId : m_statesToInvoke)
+        for (int stateId : std::as_const(m_statesToInvoke))
             addService(stateId);
         m_statesToInvoke.clear();
     }
@@ -1147,9 +1147,9 @@ void QScxmlStateMachinePrivate::addDescendantStatesToEnter(
 
     const auto &state = m_stateTable->state(stateIndex);
     if (state.isHistoryState()) {
-        HistoryValues::const_iterator historyValueIter = m_historyValue.find(stateIndex);
-        if (historyValueIter != m_historyValue.end()) {
-            auto historyValue = historyValueIter.value();
+        HistoryValues::const_iterator historyValueIter = m_historyValue.constFind(stateIndex);
+        if (historyValueIter != m_historyValue.constEnd()) {
+            const QList<int> historyValue = historyValueIter.value();
             for (int s : historyValue)
                 addDescendantStatesToEnter(s, statesToEnter, statesForDefaultEntry,
                                            defaultHistoryContent);

@@ -2316,7 +2316,7 @@ QByteArray QScxmlCompilerPrivate::load(const QString &name, bool *ok)
     QStringList errs;
     const QByteArray result = m_loader->load(name, m_fileName.isEmpty() ?
                               QString() : QFileInfo(m_fileName).path(), &errs);
-    for (const QString &err : errs)
+    for (const QString &err : std::as_const(errs))
         addError(err);
 
     *ok = errs.isEmpty();
