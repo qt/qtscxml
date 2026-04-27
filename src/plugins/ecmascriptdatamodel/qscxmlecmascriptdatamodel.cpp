@@ -152,9 +152,8 @@ public:
             auto keyValues = eventData.value<QVariantMap>();
             auto data = engine->newObject();
 
-            for (QVariantMap::const_iterator it = keyValues.begin(), eit = keyValues.end(); it != eit; ++it) {
+            for (auto it = keyValues.cbegin(), eit = keyValues.cend(); it != eit; ++it)
                 data.setProperty(it.key(), engine->toScriptValue(it.value()));
-            }
 
             return data;
         }

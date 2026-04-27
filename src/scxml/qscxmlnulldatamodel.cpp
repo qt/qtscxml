@@ -29,13 +29,10 @@ public:
         Q_Q(QScxmlNullDataModel);
         Q_ASSERT(ok);
 
-        ResolvedEvaluatorInfo info;
-        Resolved::const_iterator it = resolved.find(id);
-        if (it == resolved.end()) {
-            info = prepare(id);
-        } else {
-            info = it.value();
-        }
+        const auto it = resolved.constFind(id);
+        const ResolvedEvaluatorInfo info = (it == resolved.constEnd())
+                ? prepare(id)
+                : it.value();
 
         if (info.error) {
             *ok = false;
