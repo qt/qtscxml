@@ -1,6 +1,6 @@
---- .upstream/generator.h	2025-12-08 08:44:49.600222497 +0100
-+++ generator.h	2025-12-08 11:38:46.170083870 +0100
-@@ -6,24 +6,35 @@
+--- .upstream/generator.h	2026-02-16 10:49:39.817943048 +0100
++++ generator.h	2026-05-05 08:16:55.562826360 +0200
+@@ -6,23 +6,34 @@
  
  #include "moc.h"
  
@@ -24,11 +24,10 @@
 -    Generator(Moc *moc, const ClassDef *classDef, const QList<QByteArray> &metaTypes,
 +    Generator(const ClassDef *classDef, const QList<QByteArray> &metaTypes,
                const QHash<QByteArray, QByteArray> &knownQObjectClasses,
-               const QHash<QByteArray, QByteArray> &knownGadgets,
-               const QHash<QByteArray, QByteArray> &hashes,
--              FILE *outfile = nullptr, bool requireCompleteTypes = false);
+-              const QHash<QByteArray, QByteArray> &knownGadgets, FILE *outfile = nullptr,
++              const QHash<QByteArray, QByteArray> &knownGadgets,
 +              QIODevice &outfile, // -- QtScxml
-+              bool requireCompleteTypes = false);
+               bool requireCompleteTypes = false);
      void generateCode();
      qsizetype registeredStringsCount() { return strings.size(); }
  
@@ -40,7 +39,7 @@
  private:
      bool registerableMetaType(const QByteArray &propertyType);
      void registerClassInfoStrings();
-@@ -40,7 +51,9 @@
+@@ -39,7 +50,9 @@
      void generateMetacall();
      void generateStaticMetacall();
      void generateSignal(const FunctionDef *def, int index);
