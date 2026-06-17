@@ -1,7 +1,7 @@
 QT += widgets scxml
 
-SOURCES = ../trafficlight-common/trafficlight.cpp
-HEADERS = ../trafficlight-common/trafficlight.h
+SOURCES = trafficlight.cpp
+HEADERS = trafficlight.h
 
 SOURCES += trafficlight-widgets-dynamic.cpp
 

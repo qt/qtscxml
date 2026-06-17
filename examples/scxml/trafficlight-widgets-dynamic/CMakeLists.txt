@@ -15,7 +15,7 @@ find_package(Qt6 REQUIRED COMPONENTS Core Gui Scxml Widgets)
 qt_standard_project_setup()
 
 qt_add_executable(trafficlight-widgets-dynamic
-    ../trafficlight-common/trafficlight.cpp ../trafficlight-common/trafficlight.h
+    trafficlight.cpp trafficlight.h
     trafficlight-widgets-dynamic.cpp
 )
 
@@ -32,42 +32,14 @@ target_link_libraries(trafficlight-widgets-dynamic PRIVATE
 )
 
 # Resources:
-set_source_files_properties("../trafficlight-common/background.png"
-    PROPERTIES QT_RESOURCE_ALIAS "background.png"
-)
-
-set_source_files_properties("../trafficlight-common/green.png"
-    PROPERTIES QT_RESOURCE_ALIAS "green.png"
-)
-
-set_source_files_properties("../trafficlight-common/pause.png"
-    PROPERTIES QT_RESOURCE_ALIAS "pause.png"
-)
-
-set_source_files_properties("../trafficlight-common/play.png"
-    PROPERTIES QT_RESOURCE_ALIAS "play.png"
-)
-
-set_source_files_properties("../trafficlight-common/red.png"
-    PROPERTIES QT_RESOURCE_ALIAS "red.png"
-)
-
-set_source_files_properties("../trafficlight-common/statemachine.scxml"
-    PROPERTIES QT_RESOURCE_ALIAS "statemachine.scxml"
-)
-
-set_source_files_properties("../trafficlight-common/yellow.png"
-    PROPERTIES QT_RESOURCE_ALIAS "yellow.png"
-)
-
 set(trafficlight-widgets-dynamic_resource_files
-    "../trafficlight-common/background.png"
-    "../trafficlight-common/green.png"
-    "../trafficlight-common/pause.png"
-    "../trafficlight-common/play.png"
-    "../trafficlight-common/red.png"
-    "../trafficlight-common/statemachine.scxml"
-    "../trafficlight-common/yellow.png"
+    "background.png"
+    "green.png"
+    "pause.png"
+    "play.png"
+    "red.png"
+    "statemachine.scxml"
+    "yellow.png"
 )
 
 qt6_add_resources(trafficlight-widgets-dynamic "trafficlight-widgets-dynamic"

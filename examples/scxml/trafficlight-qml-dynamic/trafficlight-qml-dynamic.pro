@@ -12,13 +12,13 @@ qml_resources.files = \
     MainView.qml \
     Button.qml \
     Lights.ui.qml \
-    ../trafficlight-common/statemachine.scxml \
-    ../trafficlight-common/play.png \
-    ../trafficlight-common/yellow.png \
-    ../trafficlight-common/red.png \
-    ../trafficlight-common/green.png \
-    ../trafficlight-common/background.png \
-    ../trafficlight-common/pause.png \
+    statemachine.scxml \
+    play.png \
+    yellow.png \
+    red.png \
+    green.png \
+    background.png \
+    pause.png \
 
 qml_resources.prefix = /qt/qml/TrafficLightApplication
 

@@ -31,7 +31,7 @@ target_link_libraries(trafficlight-qml-simple PRIVATE
 
 # Statecharts:
 qt6_add_statecharts(trafficlight-qml-simple
-    ../trafficlight-common/statemachine.scxml
+    statemachine.scxml
 )
 
 qt_add_qml_module(trafficlight-qml-simple

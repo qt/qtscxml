@@ -1,11 +1,11 @@
 <RCC>
     <qresource prefix="/">
-        <file alias="statemachine.scxml">../trafficlight-common/statemachine.scxml</file>
-        <file alias="green.png">../trafficlight-common/green.png</file>
-        <file alias="yellow.png">../trafficlight-common/yellow.png</file>
-        <file alias="red.png">../trafficlight-common/red.png</file>
-        <file alias="pause.png">../trafficlight-common/pause.png</file>
-        <file alias="play.png">../trafficlight-common/play.png</file>
-        <file alias="background.png">../trafficlight-common/background.png</file>
+        <file alias="statemachine.scxml">statemachine.scxml</file>
+        <file alias="green.png">green.png</file>
+        <file alias="yellow.png">yellow.png</file>
+        <file alias="red.png">red.png</file>
+        <file alias="pause.png">pause.png</file>
+        <file alias="play.png">play.png</file>
+        <file alias="background.png">background.png</file>
     </qresource>
 </RCC>

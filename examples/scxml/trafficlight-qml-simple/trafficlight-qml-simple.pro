@@ -8,7 +8,7 @@ SOURCES += trafficlight-qml-simple.cpp
 
 HEADERS += trafficlight-qml.h
 
-STATECHARTS = ../trafficlight-common/statemachine.scxml
+STATECHARTS = statemachine.scxml
 
 QML_IMPORT_NAME = TrafficLightApplication
 QML_IMPORT_MAJOR_VERSION = 1
@@ -16,13 +16,7 @@ QML_IMPORT_MAJOR_VERSION = 1
 qml_resources.files = \
     qmldir \
     MainView.qml \
-    Light.qml \
-    ../trafficlight-common/play.png \
-    ../trafficlight-common/yellow.png \
-    ../trafficlight-common/red.png \
-    ../trafficlight-common/green.png \
-    ../trafficlight-common/background.png \
-    ../trafficlight-common/pause.png \
+    Light.qml
 
 qml_resources.prefix = /qt/qml/TrafficLightApplication
 
