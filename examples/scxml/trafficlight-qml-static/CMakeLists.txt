@@ -31,35 +31,7 @@ target_link_libraries(trafficlight-qml-static PRIVATE
 
 # Statecharts:
 qt6_add_statecharts(trafficlight-qml-static
-    ../trafficlight-common/statemachine.scxml
-)
-
-set_source_files_properties(../trafficlight-common/play.png
-    PROPERTIES QT_RESOURCE_ALIAS "play.png"
-)
-
-set_source_files_properties(../trafficlight-common/play.png
-    PROPERTIES QT_RESOURCE_ALIAS "play.png"
-)
-
-set_source_files_properties(../trafficlight-common/yellow.png
-    PROPERTIES QT_RESOURCE_ALIAS "yellow.png"
-)
-
-set_source_files_properties(../trafficlight-common/red.png
-    PROPERTIES QT_RESOURCE_ALIAS "red.png"
-)
-
-set_source_files_properties(../trafficlight-common/green.png
-    PROPERTIES QT_RESOURCE_ALIAS "green.png"
-)
-
-set_source_files_properties(../trafficlight-common/background.png
-    PROPERTIES QT_RESOURCE_ALIAS "background.png"
-)
-
-set_source_files_properties(../trafficlight-common/pause.png
-    PROPERTIES QT_RESOURCE_ALIAS "pause.png"
+    statemachine.scxml
 )
 
 qt_add_qml_module(trafficlight-qml-static
@@ -72,12 +44,12 @@ qt_add_qml_module(trafficlight-qml-static
     SOURCES
         trafficlight-qml.h
     RESOURCES
-        ../trafficlight-common/play.png
-        ../trafficlight-common/yellow.png
-        ../trafficlight-common/red.png
-        ../trafficlight-common/green.png
-        ../trafficlight-common/background.png
-        ../trafficlight-common/pause.png
+        play.png
+        yellow.png
+        red.png
+        green.png
+        background.png
+        pause.png
 )
 
 install(TARGETS trafficlight-qml-static

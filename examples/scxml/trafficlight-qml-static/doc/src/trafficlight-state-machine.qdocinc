@@ -6,7 +6,7 @@
     \c <transition> element, we specify the event that triggers the transition
     to the state specified by the \c target attribute:
 
-    \quotefromfile trafficlight-common/statemachine.scxml
+    \quotefromfile trafficlight-qml-static/statemachine.scxml
     \skipto <state id="red">
     \printuntil <state id="green">
     \printuntil </state>

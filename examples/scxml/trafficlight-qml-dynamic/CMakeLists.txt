@@ -29,38 +29,6 @@ target_link_libraries(trafficlight-qml-dynamic PRIVATE
     Qt6::Scxml
 )
 
-set_source_files_properties("../trafficlight-common/statemachine.scxml"
-    PROPERTIES QT_RESOURCE_ALIAS "statemachine.scxml"
-)
-
-set_source_files_properties(../trafficlight-common/play.png
-    PROPERTIES QT_RESOURCE_ALIAS "play.png"
-)
-
-set_source_files_properties(../trafficlight-common/play.png
-    PROPERTIES QT_RESOURCE_ALIAS "play.png"
-)
-
-set_source_files_properties(../trafficlight-common/yellow.png
-    PROPERTIES QT_RESOURCE_ALIAS "yellow.png"
-)
-
-set_source_files_properties(../trafficlight-common/red.png
-    PROPERTIES QT_RESOURCE_ALIAS "red.png"
-)
-
-set_source_files_properties(../trafficlight-common/green.png
-    PROPERTIES QT_RESOURCE_ALIAS "green.png"
-)
-
-set_source_files_properties(../trafficlight-common/background.png
-    PROPERTIES QT_RESOURCE_ALIAS "background.png"
-)
-
-set_source_files_properties(../trafficlight-common/pause.png
-    PROPERTIES QT_RESOURCE_ALIAS "pause.png"
-)
-
 qt_add_qml_module(trafficlight-qml-dynamic
     URI TrafficLightApplication
     VERSION 1.0
@@ -69,13 +37,13 @@ qt_add_qml_module(trafficlight-qml-dynamic
         Button.qml
         Lights.ui.qml
     RESOURCES
-        ../trafficlight-common/statemachine.scxml
-        ../trafficlight-common/play.png
-        ../trafficlight-common/yellow.png
-        ../trafficlight-common/red.png
-        ../trafficlight-common/green.png
-        ../trafficlight-common/background.png
-        ../trafficlight-common/pause.png
+        statemachine.scxml
+        play.png
+        yellow.png
+        red.png
+        green.png
+        background.png
+        pause.png
 )
 
 install(TARGETS trafficlight-qml-dynamic

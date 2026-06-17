@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR BSD-3-Clause
 
 #include "statemachine.h"
-#include "../trafficlight-common/trafficlight.h"
+#include "trafficlight.h"
 
 #include <QtWidgets/qapplication.h>
 
