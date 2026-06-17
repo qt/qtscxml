@@ -51,7 +51,7 @@
 
     We connect to the states as follows:
 
-    \quotefromfile trafficlight-common/trafficlight.cpp
+    \quotefromfile trafficlight-widgets-dynamic/trafficlight.cpp
     \skipto connectToState
     \printuntil greenLight
 */

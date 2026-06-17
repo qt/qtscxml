@@ -1,7 +1,7 @@
 // Copyright (C) 2023 The Qt Company Ltd.
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR BSD-3-Clause
 
-#include "../trafficlight-common/trafficlight.h"
+#include "trafficlight.h"
 
 #include <QtWidgets/qapplication.h>
 #include <QtCore/qiodevice.h>
