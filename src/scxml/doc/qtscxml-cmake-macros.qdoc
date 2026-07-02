@@ -6,7 +6,7 @@
 \ingroup cmake-macros-qtscxml
 
 \title qt_add_statecharts
-\keyword qt6_add_statecharts
+\keyword qt_add_statecharts()
 
 \summary {Converts \c .scxml files into C++ source code.}
 
