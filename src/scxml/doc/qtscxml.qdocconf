@@ -43,7 +43,7 @@ qhp.QtScxml.subprojects.manual.title = Qt SCXML
 qhp.QtScxml.subprojects.manual.indexTitle = Qt SCXML module topics
 qhp.QtScxml.subprojects.manual.type = manual
 
-depends += qtcore qtdoc qmake qtquick qtwidgets qtstatemachine qtcmake
+depends += qtcore qtdoc qmake qtqml qtquick qtwidgets qtstatemachine qtcmake
 
 headerdirs = .. \
              ../../scxmlqml \
