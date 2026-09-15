@@ -33,6 +33,8 @@ qt_internal_add_tool(${target_name}
         $<TARGET_PROPERTY:Qt::ScxmlPrivate,INTERFACE_INCLUDE_DIRECTORIES>
     LIBRARIES
         Qt::CorePrivate
+    ATTRIBUTION_FILE_DIR_PATHS
+        ../../src/3rdparty/sha1
 )
 qt_internal_return_unless_building_tools()
 
