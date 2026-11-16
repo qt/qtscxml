@@ -5,8 +5,6 @@
 ## qscxmlc Tool:
 #####################################################################
 
-qt_internal_include_in_repo_target_set(qtscxml)
-
 qt_get_tool_target_name(target_name qscxmlc)
 qt_internal_add_tool(${target_name}
     TOOLS_TARGET Scxml

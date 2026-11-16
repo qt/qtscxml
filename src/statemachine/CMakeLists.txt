@@ -6,8 +6,6 @@
 ## StateMachine Module:
 #####################################################################
 
-qt_internal_include_in_repo_target_set(qtstatemachine)
-
 qt_internal_add_module(StateMachine
     SOURCES
         qabstractstate.cpp qabstractstate.h qabstractstate_p.h
